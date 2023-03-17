@@ -205,6 +205,98 @@ To use the source code and attack files in this repository, follow these steps:
 
 1.  Clone the repository to your local machine.
 2.  Install the necessary dependencies for the PLCs, proxy servers, and Matlab Simulink models.
+
+    1. Build the images for all the containers:
+        ```
+        docker build -t plc1 /PLCs/PLC1
+        docker build -t plc2 /PLCs/PLC2
+        docker build -t plc3 /PLCs/PLC3
+        docker build -t hmi /HMI/ScadaBR
+        docker build -t proxy /proxy        
+        docker build -t plant /PLANT/simulink
+        ```
+
+    2. Run the containers:
+        ```
+        docker run --name plc1 plc1 -p 6668:6668/udp 
+        
+        docker run --name plc2 plc2 -p 6668:6668/udp 
+
+        docker run --name plc3 plc3 -p 6668:6668/udp 
+
+        docker run --name hmi hmi 
+
+        docker run --rm --cap-add=NET_ADMIN -v "$(pwd)"/nginx.conf:/etc/nginx/nginx.conf:ro --name proxy1 proxy
+
+        docker run --rm --cap-add=NET_ADMIN -v "$(pwd)"/nginx.conf:/etc/nginx/nginx.conf:ro --name proxy2 proxy
+
+        docker run --rm --cap-add=NET_ADMIN -v "$(pwd)"/nginx.conf:/etc/nginx/nginx.conf:ro --name proxy3 proxy   
+
+        docker run --name plant plant 
+        ```
+
+    3. Create the virtual networks for the PLCs:
+        ```
+        docker network create -d macvlan --subnet=192.168.3.0/24  --gateway=192.168.3.1 -o parent=ens224  plc1-macvlan-net
+
+        docker network create -d macvlan --subnet=192.168.4.0/24  --gateway=192.168.4.1 -o parent=ens192  plc2-macvlan-net
+
+        docker network create -d macvlan --subnet=192.168.5.0/24  --gateway=192.168.5.1 -o parent=ens256  plc3-macvlan-net
+        ```
+    
+    4. Connect the containers with the proxies and the PLCs to their network:
+        ```
+        docker network connect plc1-macvlan-net plc1
+        docker network connect plc1-macvlan-net proxy1
+        docker network connect plc2-macvlan-net plc2
+        docker network connect plc2-macvlan-net proxy2
+        docker network connect plc3-macvlan-net plc3
+        docker network connect plc3-macvlan-net proxy3
+        ```
+
+    5. Create the virtual networks for the plant:
+        ```
+        docker network create -d macvlan --subnet=192.168.6.0/24  --gateway=192.168.6.1 -o parent=ens160  plc1-sim-macvlan-net
+
+        docker network create -d macvlan --subnet=192.168.7.0/24  --gateway=192.168.7.1 -o parent=ens161  plc2-sim-macvlan-net
+        
+        docker network create -d macvlan --subnet=192.168.8.0/24  --gateway=192.168.8.1 -o parent=ens162  plc3-sim-macvlan-net
+        ```
+
+    6. Connect the PLCs to the plant network:
+        ```
+        docker network connect plc1-sim-macvlan-net plc1
+        docker network connect plc2-sim-macvlan-net plc2
+        docker network connect plc3-sim-macvlan-net plc3
+
+        docker network connect plc1-sim-macvlan-net hmi
+        docker network connect plc2-sim-macvlan-net hmi
+        docker network connect plc3-sim-macvlan-net hmi
+        ```
+
+    7. Route the traffic between the proxy and the PLCs:
+         ```
+        docker exec -it plc1 ip route del default
+
+        docker exec -it plc1 ip route add default via 192.168.3.3 dev eth0
+
+        docker exec -it plc2 ip route del default
+
+        docker exec -it plc2 ip route add default via 192.168.4.3 dev eth0
+
+        docker exec -it plc3 ip route del default
+
+        docker exec -it plc3 ip route add default via 192.168.5.3 dev eth0
+
+        docker exec -it proxy1 iptables -t nat -A POSTROUTING -o eth0 -j SNAT --to 192.168.2.2 
+        # all the packets that go out of proxy1 will have its ip src address
+
+        docker exec -it proxy2 iptables -t nat -A POSTROUTING -o eth0 -j SNAT --to 192.168.2.3
+
+        docker exec -it proxy3 iptables -t nat -A POSTROUTING -o eth0 -j SNAT --to 192.168.2.4
+
+        ```
+
 3.  Configure the honeynet according to your needs.
 4.  Run the honeynet.
 5.  Execute the attack files to test the honeynet's effectiveness.
