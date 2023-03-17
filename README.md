@@ -40,14 +40,45 @@ The honeynet comprises several components:  HMIs, PLCs, proxies, plant, manageme
 
 Specifically, the HMI component is built using ScadaBR, and its container is designed to automatically generate a view using a headless version of Selenium. Additionally, the HMI container connects to the PLCs using the entries plc1.net, plc2.net, and plc3.net, which may need to be modified to suit your specific configuration.
 
-The PLC container, on the other hand, is built using OpenPLC and HoneyD, with the use of HoneyPLC improvements. The PLCs are automatically loaded with the ladder logic for the use case illustrated in the image below.
+The PLC container, is built using  [OpenPLC](https://openplcproject.com/) and  [HoneyD](https://www.honeyd.org/) , with the use of  [HoneyPLC](https://github.com/sefcom/honeyplc) improvements. The PLCs are automatically loaded with the ladder logic for the use case illustrated below.
 
+### Use case
 
+![Alt text](readme/images/swat.png)
+The use case, we considered is inspired by
+[Lanotte et al.](https://arxiv.org/abs/2105.10668), consisting of a network of three PLCs to control
+(a simplified version of) the [iTrust Secure Water Treatment system](https://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&arnumber=7469060&tag=1) (SWaT).
+For simplicity, we consider only three stages, with three tanks.
 
+- Stage 1:
 
+    -   Raw water is pumped into an 80-gallon tank T-201 via pump P-101.
+    -   A valve MV-301 connects tank T-201 to a filtration unit that releases treated water into a second tank T-202 (with a capacity of 20 gallons).
+    -   Water in T-202 flows into a reverse osmosis unit to reduce inorganic impurities.
+
+- Stage 2:
+
+    -   PLC-1 manages tank T-201 and controls the water level.
+    -   PLC-2 manages tank T-202 and controls the valve opening/closing.
+    -   The valve remains open when the tank is refilling and closed when it is emptying.
+    -   If the water level in T-201 reaches its low setpoint, the pump is turned on and the valve is closed. If it reaches its high setpoint, the pump is turned off.
+
+-  Stage 3:
+
+    -   PLC-3 manages the backwash tank T-203 and controls the pump P-102.
+    -   If the water level in T-203 reaches the low setpoint, the pump is turned off. If it reaches the high setpoint, the entire content of T-203 is pumped back into the filtration unit of T-202.
+
+-  Additional: 
+    - The HMI is used to visualize the status of the three tanks and their components.
+
+### Network
 The expected network outcome of the honeynet is illustrated in the following picture.
 
 ![Alt text](readme/images/network.png)
+
+To ensure secure communication and prevent lateral movement, each PLC is situated on an individual network with a proxy serving as its default gateway. These proxies are strategically positioned in front of the PLCs, enabling bi-directional communication management. 
+
+Moreover, the placement of probes directly on the proxy will facilitate the seamless capture of data transmitted to physical devices, providing scope for future enhancement.
 
 ## Setup
 
@@ -131,7 +162,42 @@ In order to properly configure the attacker machine for the purposes of this exp
             -   For pip2:  `pip2 --version`
 
 2. **Python Libraries**
+    
+    1.  Install  pymodbus  using the  pip command:  `pip install pymodbus`
+        
+    2.  Install  easymodbus using the pip command: `pip install easymodbus`
+        
+    3.  Once the installation is complete, you can import the modules:
+        
+        ```
+        import pymodbus
+        import easymodbus
+        ```
 
+3. **Dsniff**
+
+    1.  Install  dsniff  using the  package manager  of your operating system. On a Debian-based system, you can use the  apt package manager: `sudo apt-get install dsniff`
+        
+    2.  Once the installation is complete, you can use the command-line interface to run the various tools included in  `dsniff`.
+
+    >`dsniff`  is a collection of tools for network auditing and  penetration testing. It includes tools for sniffing passwords, analyzing network traffic, and performing man-in-the-middle attacks.
+    Some of the tools included in  `dsniff`  are:
+        >-   `arpspoof`: to redirect packets from a target host to the attacker's machine.
+        >-   `dnsspoof`: to forge  DNS responses  to redirect traffic to a different IP address.
+        >-   `urlsnarf`: to capture URLs visited by users on the network.
+        >-   `tcpkill`: to terminate  TCP connections.
+        >-   `mailsnarf`: to capture email traffic on the network.
+        >-   `filesnarf`: to capture files transferred over the network.
+
+4. **IPtables**
+    
+    1. iptables  is typically pre-installed on most Linux distributions.
+
+        -   If  `iptables`  is not already installed on your system, you can install it using the  package manager  of your operating system. On a Debian-based system, you can use the  apt package manager:`sudo apt-get install iptables`
+
+5. **OpenVPN client**
+
+    1. Install the  OpenVPN client  using the  package manager  of your operating system. On a Debian-based system, you can use the  apt package manager: `sudo apt-get install openvpn`
 
 ## Usage
 
