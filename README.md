@@ -60,6 +60,17 @@ This directory contains the attack files used in the experiments conducted in th
         
     3.  **Check iptables status:**  Check the status of your current iptables configuration by running the command: `sudo iptables`
 
+6. Install OpenVPN server:
+
+    1. **Download the OpenVPN Server tar**
+    2. Launch the following command `tar xfz openvpn-[version].tar.gz`
+    3. cd into the directory an run the following commands:
+        ```
+        ./configure
+        make
+        make install
+        ```
+
 ### Prerequisites for the attacker
 In order to properly configure the attacker machine for the purposes of this experiment, it is necessary to install and set up several specific tools and libraries. These include:
 - Python
