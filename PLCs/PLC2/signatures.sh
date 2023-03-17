@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # URL of the file to download
-url="https://raw.githubusercontent.com/marcolucc/scadBR-docker/main/nmap-os-db"
+url="https://anonymous.4open.science/r/scadBR-docker-5E20/"
 rm /usr/share/honeyd/nmap-os-db
 # Destination location
 destination="/usr/share/honeyd/"

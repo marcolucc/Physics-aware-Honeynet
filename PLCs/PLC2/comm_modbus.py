@@ -33,15 +33,14 @@ while (True):
         print("coil reading error")
 
     try:
-        #print("\n Richiesta: ")
-        richiesta = inputRegisters[0]
+        req = inputRegisters[0]
     
-        print(richiesta)
+        print(req)
     except:
         print("buffer reading error")
     
     try:
-        plc1.write_single_coil(2, richiesta)
+        plc1.write_single_coil(2, req)
 
         plc1.read_coils(2, 1)
     except:

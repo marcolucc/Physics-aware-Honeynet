@@ -17,10 +17,10 @@ int main()
     while (!stop_flag1)
     {
         // Connect to plc1
-        plc1 = modbus_new_tcp("plc1.rete", 502);
+        plc1 = modbus_new_tcp("plc1.net", 502);
         if (modbus_connect(plc1) == -1)
         {
-            std::cout << "Errore connessione plc1" << std::endl;
+            std::cout << "Connection error PLC1" << std::endl;
             modbus_free(plc1);
             sleep(1);
         }
@@ -36,7 +36,7 @@ int main()
         plc2 = modbus_new_tcp("localhost", 502);
         if (modbus_connect(plc2) == -1)
         {
-            std::cout << "Errore connessione plc2" << std::endl;
+            std::cout << "Connection error PLC2" << std::endl;
             modbus_free(plc2);
             sleep(1);
         }
@@ -55,23 +55,23 @@ int main()
             // Read input registers from plc2
             modbus_read_bits(plc2, 0, 1, inputRegisters);
 
-            bool richiesta = inputRegisters[0];
-            std::cout << richiesta << std::endl;
+            bool req = inputRegisters[0];
+            std::cout << req << std::endl;
         }
         catch (...)
         {
-            std::cout << "Errore in lettura coil" << std::endl;
+            std::cout << "coil reading error" << std::endl;
         }
 
         try
         {
             // Write request to plc1
-            modbus_write_bit(plc1, 2, richiesta);
+            modbus_write_bit(plc1, 2, req);
             modbus_read_bits(plc1, 2, 1, inputRegisters);
         }
         catch (...)
         {
-            std::cout << "Errore scrittura" << std::endl;
+            std::cout << "Writing error" << std::endl;
         }
 
         sleep(1);

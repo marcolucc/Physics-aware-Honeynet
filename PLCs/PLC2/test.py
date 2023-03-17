@@ -12,12 +12,12 @@ stop_flag2 = False
 while not stop_flag1:
     try:
         #connect to plc1
-        plc1 = modbus_tcp.TcpMaster('plc1.rete', 502)
+        plc1 = modbus_tcp.TcpMaster('plc1.net', 502)
         plc1.set_timeout(5.0)
         plc1.connect()
         stop_flag1 = True
     except:
-        print("errore connessione plc1")
+        print("connection error plc1")
         time.sleep(1)
 
 while not stop_flag2:
@@ -28,23 +28,23 @@ while not stop_flag2:
         plc2.connect()
         stop_flag2 = True
     except:
-        print("errore connessione plc2")
+        print("connection error plc2")
         time.sleep(1)
 
 while True:
     try:
         #read input registers from plc2
         inputRegisters = plc2.execute(1, cst.READ_COILS, 0, 1)
-        richiesta = inputRegisters[0]
-        print(richiesta)
+        req = inputRegisters[0]
+        print(req)
     except:
-        print("Errore in lettura coil")
+        print("coil reading error")
 
     try:
         #write request to plc1
-        plc1.execute(1, cst.WRITE_SINGLE_COIL, 2, output_value=richiesta)
+        plc1.execute(1, cst.WRITE_SINGLE_COIL, 2, output_value=req)
         plc1.execute(1, cst.READ_COILS, 2, 1)
     except:
-        print("errore scrittura")
+        print("writing error")
 
     time.sleep(1)
