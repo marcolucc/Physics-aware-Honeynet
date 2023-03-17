@@ -32,11 +32,22 @@ This repository contains the following directories:
 
 Within this repository, we have provided detailed instructions on how to successfully replicate our honeynet and execute the attacks outlined in our published article.
 
-While it is possible to install all necessary components on a singular machine, we highly recommend allocating the simulink container to a distinct device in order to circumvent any unforeseen issues arising from potential RAM depletion.
+> While it is possible to install all necessary components on a singular machine, we highly recommend allocating the simulink container to a distinct device in order to circumvent any unforeseen issues arising from potential RAM depletion.
+
+![Alt text](readme/images/abstract.png)
+
+The honeynet comprises several components:  HMIs, PLCs, proxies, plant, management and  monitoring dashboards, and probes. Each element is containerized using Docker technology.
+
+Specifically, the HMI component is built using ScadaBR, and its container is designed to automatically generate a view using a headless version of Selenium. Additionally, the HMI container connects to the PLCs using the entries plc1.net, plc2.net, and plc3.net, which may need to be modified to suit your specific configuration.
+
+The PLC container, on the other hand, is built using OpenPLC and HoneyD, with the use of HoneyPLC improvements. The PLCs are automatically loaded with the ladder logic for the use case illustrated in the image below.
+
+
+
 
 The expected network outcome of the honeynet is illustrated in the following picture.
 
-![Alt text](readme/images/network.pdf)
+![Alt text](readme/images/network.png)
 
 ## Setup
 
