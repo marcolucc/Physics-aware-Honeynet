@@ -6,11 +6,9 @@ RUN apt-get update && \
     apt-get -y install git python-pip autoconf bison build-essential pkg-config bison flex autoconf automake libtool make git python2.7 python-pip sqlite3 cmake sudo
 RUN pip install flask flask-login pyserial pymodbus
 
-# Install dependencies
 RUN apt-get update \
   && apt-get install -y wget gcc make openssl libffi-dev libgdbm-dev libsqlite3-dev libssl-dev zlib1g-dev \
   && apt-get clean
-
 
 WORKDIR /home/
 
@@ -18,7 +16,6 @@ RUN apt-get update
 RUN apt-get install -y git libevent-dev libdumbnet-dev libpcap-dev libpcre3-dev libedit-dev bison flex libtool automake git zlib1g-dev make
 COPY Honeyd/ /home/Honeyd/
 WORKDIR Honeyd
-
 
 RUN mv configure.in configure.ac
 RUN ./autogen.sh
