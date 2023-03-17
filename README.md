@@ -52,7 +52,13 @@ This directory contains the attack files used in the experiments conducted in th
 
     4. Start Kibana container: Start a Kibana container and connect it to your Elasticsearch container by running the command: `docker run --name kib-01 --net elastic -p 5601:5601 docker.elastic.co/kibana/kibana:8.6.2`
 
-5.
+5. Install IPtables:
+
+    1.  **Update package manager:**  Update your package manager by running the command: ` sudo apt update`
+        
+    2.  **Install iptables:**  Install iptables by running the command: `sudo apt install iptables`
+        
+    3.  **Check iptables status:**  Check the status of your current iptables configuration by running the command: `sudo iptables`
 
 ### Prerequisites for the attacker
 In order to properly configure the attacker machine for the purposes of this experiment, it is necessary to install and set up several specific tools and libraries. These include:
