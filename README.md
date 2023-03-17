@@ -12,26 +12,39 @@ Industrial control systems (ICSs) are vulnerable to cyber-physical attacks, i.e.
 
 This repository contains the following directories:
 
-### PLCs
+- **PLCs**
 
-This directory contains the source code to build the software PLC that can be used in the honeynet. The PLCs' codes are implemented in ladder logic and are designed to simulate the behavior of real-world ICSs.
+    This directory contains the source code to build the software PLC that can be used in the honeynet. The PLCs' codes are implemented in ladder logic and are designed to simulate the behavior of real-world ICSs.
 
-### Proxy
+- **Proxy**
 
-This directory contains the source code for the proxy servers used in the honeynet. The proxies are responsible for forwarding traffic between the PLCs.
+    This directory contains the source code for the proxy servers used in the honeynet. The proxies are responsible for forwarding traffic between the PLCs.
 
-### Matlab Simulink
+- **Matlab Simulink**
 
-This directory contains the source code for the Matlab Simulink models used in the honeynet. The models are used to simulate the physical processes controlled by the PLCs.
+    This directory contains the source code for the Matlab Simulink models used in the honeynet and the Dockerfile to build the container. The models are used to simulate the physical processes controlled by the PLCs. To run it you will need an active Matlab License
 
-### Attacks
+ - **Attacks**
 
-This directory contains the attack files used in the experiments conducted in the paper. The directory is further divided into subdirectories for each attack. Each subdirectory contains the necessary files to execute the attack, including scripts, payloads, and configuration files.
+    This directory contains the attack files used in the experiments conducted in the paper. The directory is further divided into subdirectories for each attack. Each subdirectory contains the necessary files to execute the attack, including scripts, payloads, and configuration files.
+
+## Overview
+
+Within this repository, we have provided detailed instructions on how to successfully replicate our honeynet and execute the attacks outlined in our published article.
+
+While it is possible to install all necessary components on a singular machine, we highly recommend allocating the simulink container to a distinct device in order to circumvent any unforeseen issues arising from potential RAM depletion.
+
+The expected network outcome of the honeynet is illustrated in the following picture.
+
+![Alt text](readme/images/network.pdf)
 
 ## Setup
 
-![Alt text](image_url)
+In each subdirectory where it is deemed necessary, comprehensive guidelines on utilizing each component of the honeynet can be found within the README.md file.
+
+
 ### Prerequisites for the honeynet
+
 1. Make sure your system meets the requirements for installing Docker.
 2. Install Docker:
     1. Update your package manager’s index:
@@ -63,8 +76,10 @@ This directory contains the attack files used in the experiments conducted in th
 6. Install OpenVPN server:
 
     1. **Download the OpenVPN Server tar**
+
     2. Launch the following command `tar xfz openvpn-[version].tar.gz`
-    3. cd into the directory an run the following commands:
+
+    3. `cd `into the directory an run the following commands:
         ```
         ./configure
         make
@@ -81,28 +96,32 @@ In order to properly configure the attacker machine for the purposes of this exp
 - OpenVPN client
 
 
-#### Python
-1.  **Update package manager:**  Update your package manager by running the command: ` sudo apt update `
-    
-2.  **Install Python versions:**  Install both versions of Python by running their respective commands:
-    
-    -   For Python 3.7:  `sudo apt install python3.7`
-    -   For Python 2.7:  `sudo apt install python2.7`
-3.  **Install pip:**  Install pip for both versions of Python by running their respective commands:
-    
-    -   For Python 3.7:  `sudo apt install python3-pip`
-    -   For Python 2.7:  `sudo apt install python-pip`
-
-4. **Check if everything is installed correctly** by running the following commands:
-
-    1.  **Check Python versions:**  Check the installed versions of Python by running their respective commands:
+1. **Python**
+    1.  **Update package manager:**  Update your package manager by running the command: ` sudo apt update `
         
-        -   For Python 3.7:  `python3.7 --version`
-        -   For Python 2.7:  `python2.7 --version`
-    2.  **Check pip versions:**  Check the installed versions of pip by running their respective commands:
+    2.  **Install Python versions:**  Install both versions of Python by running their respective commands:
         
-        -   For pip3:  `pip3 --version`
-        -   For pip2:  `pip2 --version`
+        -   For Python 3.7:  `sudo apt install python3.7`
+        -   For Python 2.7:  `sudo apt install python2.7`
+    3.  **Install pip:**  Install pip for both versions of Python by running their respective commands:
+        
+        -   For Python 3.7:  `sudo apt install python3-pip`
+        -   For Python 2.7:  `sudo apt install python-pip`
+
+    4. **Check if everything is installed correctly** by running the following commands:
+
+        1.  **Check Python versions:**  Check the installed versions of Python by running their respective commands:
+            
+            -   For Python 3.7:  `python3.7 --version`
+            -   For Python 2.7:  `python2.7 --version`
+        2.  **Check pip versions:**  Check the installed versions of pip by running their respective commands:
+            
+            -   For pip3:  `pip3 --version`
+            -   For pip2:  `pip2 --version`
+
+2. **Python Libraries**
+
+
 ## Usage
 
 To use the source code and attack files in this repository, follow these steps:
