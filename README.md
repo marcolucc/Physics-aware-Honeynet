@@ -24,7 +24,7 @@ This repository contains the following directories:
 
     This directory contains the source code for the Matlab Simulink models used in the honeynet and the Dockerfile to build the container. The models are used to simulate the physical processes controlled by the PLCs. To run it you will need an active Matlab License
 
- - **Attacks**
+- **Attacks**
 
     This directory contains the attack files used in the experiments conducted in the paper. The directory is further divided into subdirectories for each attack. Each subdirectory contains the necessary files to execute the attack, including scripts, payloads, and configuration files.
 
@@ -219,7 +219,7 @@ To use the source code and attack files in this repository, follow these steps:
     2. Run the containers:
         ```
         docker run --name plc1 plc1 -p 6668:6668/udp 
-        
+
         docker run --name plc2 plc2 -p 6668:6668/udp 
 
         docker run --name plc3 plc3 -p 6668:6668/udp 
