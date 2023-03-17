@@ -10,7 +10,7 @@ RUN pip install flask flask-login pyserial pymodbus
 
 WORKDIR /home/
 
-RUN git clone https://github.com/marcolucc/Honeyd.git
+COPY Honeyd/ /home/Honeyd/
 WORKDIR Honeyd
 
 RUN mv configure.in configure.ac
@@ -20,12 +20,9 @@ RUN ./configure
 RUN make 
 RUN make install 
 
-# Copy the script to the image
 COPY signatures.sh /app/signatures.sh
 WORKDIR /app
 ADD honeyd.conf /app/honeyd.conf
-
-# Set the script as the command to run when the container starts
 RUN chmod +x signatures.sh && ./signatures.sh
 
 WORKDIR /home/
@@ -47,12 +44,8 @@ COPY launch.sh /home/OpenPLC_v3/launch.sh
 EXPOSE 502
 EXPOSE 6668/udp
 EXPOSE 8080
-# Ports
 EXPOSE 47
 EXPOSE 67
 EXPOSE 68
 
-CMD sudo echo '192.168.10.106  plc1.rete' >> /etc/hosts && echo '192.168.10.107  plc2.rete' >> /etc/hosts && echo '192.168.10.108  plc3.rete' >> /etc/hosts; nohup honeyd -d -f /app/honeyd.conf &> honeyd.log; sh /home/OpenPLC_v3/run.sh
-#CMD sh /home/OpenPLC_v3/launch.sh
-#WORKDIR /app
-#CMD ["honeyd", "-d", "-f", "honeyd.conf"]
+CMD sudo echo '192.168.10.106  plc1.net' >> /etc/hosts && echo '192.168.10.107  plc2.net' >> /etc/hosts && echo '192.168.10.108  plc3.net' >> /etc/hosts; nohup honeyd -d -f /app/honeyd.conf &> honeyd.log; sh /home/OpenPLC_v3/run.sh
